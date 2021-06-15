@@ -6,8 +6,25 @@
 ///////////////////////////////////////////////////////////////////////////
 
 #include "ShipDrivergui.h"
+#include <wx/panel.h>
 
 ///////////////////////////////////////////////////////////////////////////
+/** Invokes client browser on plugin info_url when clicked. */
+
+struct TestButton: public wxPanel
+{
+    TestButton(wxWindow* parent) :wxPanel(parent)
+    {
+        auto vbox = new wxBoxSizer(wxVERTICAL);
+        auto button = new wxButton(this, wxID_ANY, _("Test"));
+        button->Enable(true);
+        vbox->Add(button);
+        SetSizer(vbox);
+        const char* url = "/home/mk/.var/app/org.opencpn.OpenCPN/data/opencpn/plugins/ShipDriver_pi/data/test.html";
+        Bind(wxEVT_COMMAND_BUTTON_CLICKED,
+            [=](wxCommandEvent&) {wxLaunchDefaultBrowser(url);});
+    }
+};
 
 ShipDriverBase::ShipDriverBase(wxWindow* parent, wxWindowID id,
     const wxString& title, const wxPoint& pos, const wxSize& size, long style)
@@ -405,6 +422,7 @@ shipdriverPreferences::shipdriverPreferences(wxWindow* parent, wxWindowID id,
     m_sdbSizer1->Realize();
 
     sbSizer1->Add(m_sdbSizer1, 1, wxEXPAND, 5);
+    sbSizer1->Add(new TestButton(this), 0, wxEXPAND, 5);
 
     this->SetSizer(sbSizer1);
     this->Layout();
