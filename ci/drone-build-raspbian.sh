@@ -15,6 +15,10 @@ sudo apt-get install -q devscripts equivs
 sudo mk-build-deps -ir build-deps/control-raspbian
 sudo apt-get -q --allow-unauthenticated install -f
 
+git tag --contains HEAD
+git rev-parse HEAD
+git tag -l
+
 # Temporary fix until 3.19 is available as a pypi package
 # 3.19 is needed: https://gitlab.kitware.com/cmake/cmake/-/issues/20568
 url='https://dl.cloudsmith.io/public/alec-leamas/opencpn-plugins-stable/deb/debian'
