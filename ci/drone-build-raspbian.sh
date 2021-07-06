@@ -15,6 +15,7 @@ sudo apt-get install -q devscripts equivs
 sudo mk-build-deps -ir build-deps/control-raspbian
 sudo apt-get -q --allow-unauthenticated install -f
 
+git fetch --all --tags
 git tag --contains HEAD
 git rev-parse HEAD
 git tag -l
