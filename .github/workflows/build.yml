@@ -1,0 +1,18 @@
+name: build
+on:
+  push:
+    branches: 
+      - ga
+jobs:
+  job1:
+    runs-on: ubuntu-20.04
+    env:
+      OCPN_TARGET: flatpak-arm64
+      CMAKE_BUILD_PARALLEL_LEVEL: 2
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build Flatpak aarch64, upload tarball and metadata
+        run: |
+          ci/circleci-build-flatpak.sh
+          cd build; /bin/bash < upload.sh; cd ..
+          python3 ci/git-push
