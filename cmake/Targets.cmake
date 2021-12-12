@@ -185,6 +185,7 @@ function (flatpak_target manifest)
       COMMAND
         flatpak-builder
           --state-dir ${CMAKE_SOURCE_DIR}/flatpak/cache --force-clean
+          --keep-build-dirs
           ${CMAKE_CURRENT_BINARY_DIR}/app ${manifest}
     )
     execute_process(
