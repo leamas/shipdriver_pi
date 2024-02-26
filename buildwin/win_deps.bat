@@ -107,6 +107,11 @@ if not exist "%WXWIN%" (
       7z x -o%SCRIPTDIR%..\cache\wxWidgets-3.2.4 wxMSW-3.2.4_vc14x_Dev.7z
       wget -nv !GITHUB_DL!/v3.2.4/wxWidgets-3.2.4-headers.7z
       7z x -o%SCRIPTDIR%..\cache\wxWidgets-3.2.4 wxWidgets-3.2.4-headers.7z
+      :: Handle #584
+      pushd %SCRIPTDIR%..\cache
+      git apply %SCRIPTDIR%\wxwidgets-3.2.4-584.patch
+      popd
+      
   ) else (
       echo Downloading 3.1.2
       wget -O wxWidgets-3.1.2.7z -nv ^
