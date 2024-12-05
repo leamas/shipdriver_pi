@@ -37,7 +37,7 @@ include(PluginCompiler)
 add_library(${CMAKE_PROJECT_NAME} SHARED EXCLUDE_FROM_ALL ${SRC})
 include_directories(BEFORE ${CMAKE_BINARY_DIR}/include)
 
-add_subdirectory("opencpn-libs/${PKG_API_LIB}")
+add_subdirectory("libs/api-19")
 target_link_libraries(${CMAKE_PROJECT_NAME} ocpn::api)
 
 set(VERSION_MAJOR ${PROJECT_VERSION_MAJOR})
@@ -76,7 +76,7 @@ if ("${BUILD_TYPE}" STREQUAL "")
   return ()
 endif ()
 
- 
+
 if (NOT ${BUILD_TYPE} STREQUAL "flatpak")
   # Build package as required (flatpak already dealt with).
   #
@@ -92,7 +92,7 @@ if (NOT ${BUILD_TYPE} STREQUAL "flatpak")
   include(PluginLocalization)
 
   include_directories(BEFORE ${CMAKE_BINARY_DIR}/include)
- 
+
   if (COMMAND add_plugin_libraries)
     add_plugin_libraries()
   endif ()
