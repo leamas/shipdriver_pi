@@ -11,6 +11,7 @@
 :: The regular installation using webi is broken since long, the root
 :: cause (pun intended) is broken https setup at https://rootprojects.org.
 ::
+choco ugrade -y chocolatey
 set localbin="%HomeDrive%%HomePath%\.local\bin"
 set pathman_path="buildwin\pathman.exe"
 if not "%APPVEYOR_BUILD_FOLDER%" == "" (
