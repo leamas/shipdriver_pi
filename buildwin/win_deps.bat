@@ -36,6 +36,7 @@ pathman add "%CMAKE_HOME%\bin" > nul
 set POEDIT_HOME=C:\Program Files\Poedit\Gettexttools
 if not exist "%POEDIT_HOME%" choco install --no-progress -y poedit
 pathman add "%POEDIT_HOME%\bin" > nul
+type c:\programdata\chocolatey\logs\chocolatey.log
 
 :: Update required python stuff
 ::
