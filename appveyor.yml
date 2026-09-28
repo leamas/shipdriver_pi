@@ -7,7 +7,7 @@ image:
   - Visual Studio 2022
 
 platform:
-  - x64
+  - Win32
 
 configuration: RelWithDebInfo
 test: false
