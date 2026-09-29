@@ -47,8 +47,11 @@ if not exist "%CMAKE_HOME%\bin\cmake.exe" choco install --no-progress -y cmake
 pathman add "%CMAKE_HOME%\bin" > nul
 
 :: Install choco poedit and add it's persistent user path element
-::
+:: On Appveyor, remove 64-bit poedit which is in the way
 @echo on
+if not "%APPVEYOR_BUILD_FOLDER%" == "" (
+  rmdir /s /q "C:\Program Files (x86)\Poedit\Gettexttools"
+)
 if exist "C:\Program Files (x86)\Poedit\Gettexttools" (
   set POEDIT_HOME="C:\Program Files (x86)\Poedit\Gettexttools"
 ) else (
