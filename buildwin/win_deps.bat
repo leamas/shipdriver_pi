@@ -86,11 +86,12 @@ set wxWidgets_ROOT_DIR=%WXWIN%
 set wxWidgets_LIB_DIR=%WXWIN%\lib\native\x86\release
 if not exist "%CACHEDIR%" mkdir "%CACHEDIR%"
 if not exist "%WXWIN%" (
-  cd %CACHEDIR%
+  pushd %CACHEDIR%
   if not exist "nuget.exe" (
     wget https://dist.nuget.org/win-x86-commandline/latest/nuget.exe
   )
   nuget install wxWidgets -Version 3.2.8
+  popd
 )
 pathman add "%WXWIN%" > nul
 pathman add "%wxWidgets_LIB_DIR%" > nul
