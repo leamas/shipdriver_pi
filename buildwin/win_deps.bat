@@ -25,6 +25,8 @@ if errorlevel 1 set PATH=%PATH%;%HomeDrive%\%HomePath%\.local\bin
 pathman add %HomeDrive%%HomePath%\.local\bin >nul
 
 :: Make sure we use 64-bit python on appveyor
+:: Outside appveyor, make sure we don't use the pesky python alias
+:: invoking appstore installed by MS.
 if not "%APPVEYOR_BUILD_FOLDER%" == "" (
     rmdir /s /q C:\Python312
     rmdir /s /q C:\Python313
@@ -32,6 +34,8 @@ if not "%APPVEYOR_BUILD_FOLDER%" == "" (
     pathman add C:\Python314-x64
     pathman add C:\Python314-x64\Scripts
     set python="C:\Python314-x64\python"
+) else if exist "C:\python314" (
+    set python="C:\python314\python.exe"
 ) else (
     set python="python"
 )
@@ -44,9 +48,14 @@ pathman add "%CMAKE_HOME%\bin" > nul
 
 :: Install choco poedit and add it's persistent user path element
 ::
-set POEDIT_HOME=C:\Program Files (x86)\Poedit\Gettexttools
-if not exist "%POEDIT_HOME%" (
-    choco install --version 2.4.2 --no-progress -y poedit
+@echo on
+if exist "C:\Program Files (x86)\Poedit\Gettexttools" (
+  set POEDIT_HOME="C:\Program Files (x86)\Poedit\Gettexttools"
+) else (
+  set POEDIT_HOME="C:\Program Files\Poedit\Gettexttools"
+)
+if not exist %POEDIT_HOME% (
+  choco install --version 2.4.2 --no-progress -y poedit
 )
 
 pathman add "%POEDIT_HOME%\bin" > nul
@@ -66,27 +75,22 @@ echo "Checking for 64-bit python"
 %python% -m pip install -q --no-warn-script-location setuptools wheel
 %python% -m pip install -q --no-warn-script-location cloudsmith-cli
 %python% -m pip install -q --no-warn-script-location cryptography
-@echo off
+:: @echo off
 
 :: Install pre-compiled wxWidgets and other DLL; add required paths.
 ::
 set SCRIPTDIR=%~dp0
-set WXWIN=%SCRIPTDIR%..\cache\wxWidgets
+set WXWIN=%SCRIPTDIR%..\cache\wxWidgets.3.2.8
+set CACHEDIR=%SCRIPTDIR%..\cache
 set wxWidgets_ROOT_DIR=%WXWIN%
-set wxWidgets_LIB_DIR=%WXWIN%\lib\vc_dll
+set wxWidgets_LIB_DIR=%WXWIN%\lib\native\x86\release
+if not exist "%CACHEDIR%" mkdir "%CACHEDIR%"
 if not exist "%WXWIN%" (
-  wget --version > nul 2>&1 || choco install --no-progress -y wget
-  wget -q https://github.com/wxWidgets/wxWidgets/releases/download/v3.2.6/wxWidgets-3.2.6-headers.7z ^
-      -O wxWidgetsHeaders.7z
-  wget -q https://github.com/wxWidgets/wxWidgets/releases/download/v3.2.6/wxMSW-3.2.6_vc14x_ReleaseDLL.7z ^
-      -O wxWidgetsDLL.7z
-  wget -q https://github.com/wxWidgets/wxWidgets/releases/download/v3.2.6/wxMSW-3.2.6_vc14x_Dev.7z ^
-      -O wxWidgetsDev.7z
-  7z i > nul 2>&1 || choco install -y 7zip
-  7z x -aoa wxWidgetsHeaders.7z -o%WXWIN%
-  7z x -aoa wxWidgetsDLL.7z -o%WXWIN%
-  7z x -aoa wxWidgetsDev.7z -o%WXWIN%
-  ren "%WXWIN%\lib\vc14x_dll" vc_dll
+  cd %CACHEDIR%
+  if not exist "nuget.exe" (
+    wget https://dist.nuget.org/win-x86-commandline/latest/nuget.exe
+  )
+  nuget install wxWidgets -Version 3.2.8
 )
 pathman add "%WXWIN%" > nul
 pathman add "%wxWidgets_LIB_DIR%" > nul
