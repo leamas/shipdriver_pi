@@ -24,6 +24,7 @@ pathman list > nul 2>&1
 if errorlevel 1 set PATH=%PATH%;%HomeDrive%\%HomePath%\.local\bin
 pathman add %HomeDrive%%HomePath%\.local\bin >nul
 
+@echo on
 :: Make sure we use 64-bit python on appveyor
 :: Outside appveyor, make sure we don't use the pesky python alias
 :: invoking appstore installed by MS.
@@ -47,20 +48,11 @@ if not exist "%CMAKE_HOME%\bin\cmake.exe" choco install --no-progress -y cmake
 pathman add "%CMAKE_HOME%\bin" > nul
 
 :: Install choco poedit and add it's persistent user path element
-:: On Appveyor, remove 64-bit poedit which is in the way
-@echo on
-if not "%APPVEYOR_BUILD_FOLDER%" == "" (
-  rmdir /s /q "C:\Program Files (x86)\Poedit\Gettexttools"
+:: This installs the last win32 version available
+set POEDIT_HOME=C:\Program Files (x86)\Poedit\Gettexttools
+if not exist "%POEDIT_HOME%" (
+  choco install --version 2.4.2 --no-progress -y --allow-downgrade poedit
 )
-if exist "C:\Program Files (x86)\Poedit\Gettexttools" (
-  set POEDIT_HOME="C:\Program Files (x86)\Poedit\Gettexttools"
-) else (
-  set POEDIT_HOME="C:\Program Files\Poedit\Gettexttools"
-)
-if not exist %POEDIT_HOME% (
-  choco install --version 2.4.2 --no-progress -y poedit
-)
-
 pathman add "%POEDIT_HOME%\bin" > nul
 
 :: Update required python stuff
